@@ -30,7 +30,7 @@ func backtracking5(temp []int, k, n, sum, start int) {
 		res5 = append(res5, tmp)
 		return
 	}
-	for i := start; i <= 9; i++ {
+	for i := start; i <= 9-(k-len(temp))+1; i++ {
 		temp = append(temp, i)
 		backtracking5(temp, k, n, sum+i, i+1)
 		temp = temp[:len(temp)-1]
