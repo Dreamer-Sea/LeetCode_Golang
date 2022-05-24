@@ -13,6 +13,9 @@ var res4 [][]int
 
 func combine(n int, k int) [][]int {
 	res4 = make([][]int, 0)
+	if n <= 0 || k <= 0 || k > n {
+		return res4
+	}
 	backtracking4([]int{}, n, k, 1)
 	return res4
 }
@@ -24,7 +27,7 @@ func backtracking4(temp []int, n, k, start int) {
 		res4 = append(res4, tmp)
 		return
 	}
-	for i := start; i <= n; i++ {
+	for i := start; i <= n-(k-len(temp))+1; i++ {
 		temp = append(temp, i)
 		backtracking4(temp, n, k, i+1)
 		temp = temp[:len(temp)-1]
