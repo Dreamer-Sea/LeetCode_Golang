@@ -20,9 +20,9 @@ func partition3(s string) [][]string {
 		for i := 0; i <= j; i++ {
 			if i == j {
 				dp[i][j] = true
-			} else if j-i == 1 && s[i] == s[j] {
+			} else if j-i == 1 && s[j] == s[i] {
 				dp[i][j] = true
-			} else if j-i > 1 && s[i] == s[j] && dp[i+1][j-1] {
+			} else if j-i > 1 && s[j] == s[i] && dp[i+1][j-1] {
 				dp[i][j] = true
 			}
 		}
@@ -39,6 +39,9 @@ func dfs3(s string, temp []string, start int, res *[][]string, dp [][]bool) {
 		return
 	}
 	for i := start; i < len(s); i++ {
+		if !dp[start][i] {
+			continue
+		}
 		if dp[start][i] {
 			temp = append(temp, s[start:i+1])
 			dfs3(s, temp, i+1, res, dp)

@@ -40,13 +40,14 @@ func dfs2(s string, temp []string, start int, res *[][]string, dp [][]int) {
 }
 
 func isPalindrome2(s string, start, end int, dp [][]int) bool {
-	for start < end {
-		if s[start] != s[end] {
-			dp[start][end] = 2
+	left, right := start, end
+	for left < right {
+		if s[left] != s[right] {
+			dp[left][right] = 2
 			return false
 		}
-		start++
-		end--
+		left++
+		right--
 	}
 	dp[start][end] = 1
 	return true

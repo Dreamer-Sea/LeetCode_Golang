@@ -6,17 +6,17 @@ import (
 
 func main() {
 	s := "aab"
-	partition(s)
+	res := partition(s)
 	fmt.Println(res)
 }
 
 func partition(s string) [][]string {
 	res := make([][]string, 0)
-	backtracking9(s, []string{}, 0, &res)
+	dfs1(s, []string{}, 0, &res)
 	return res
 }
 
-func backtracking9(s string, temp []string, start int, res *[][]string) {
+func dfs1(s string, temp []string, start int, res *[][]string) {
 	if start == len(s) {
 		tmp := make([]string, len(temp))
 		copy(tmp, temp)
@@ -24,27 +24,23 @@ func backtracking9(s string, temp []string, start int, res *[][]string) {
 		return
 	}
 	for i := start; i < len(s); i++ {
-		if isPalindrome(s, start, i) {
+		if isPalindrome1(s, start, i) {
 			temp = append(temp, s[start:i+1])
 		} else {
 			continue
 		}
-		backtracking9(s, temp, i+1, res)
+		dfs1(s, temp, i+1, res)
 		temp = temp[:len(temp)-1]
 	}
 }
 
-func isPalindrome(s string, start, end int) bool {
-	if len(s) == 0 {
-		return false
-	}
-	i, j := start, end
-	for i < j {
-		if s[i] != s[j] {
+func isPalindrome1(s string, start, end int) bool {
+	for start < end {
+		if s[start] != s[end] {
 			return false
 		}
-		i++
-		j--
+		start++
+		end--
 	}
 	return true
 }
