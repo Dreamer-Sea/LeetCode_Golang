@@ -13,13 +13,14 @@ func solveSudoku(board [][]byte) {
 					continue
 				}
 				for k := '1'; k <= '9'; k++ {
-					if isValid4(board, byte(k), i, j) {
-						board[i][j] = byte(k)
-						if backtracking(board) {
-							return true
-						}
-						board[i][j] = '.'
+					if !isValid4(board, byte(k), i, j) {
+						continue
 					}
+					board[i][j] = byte(k)
+					if backtracking(board) {
+						return true
+					}
+					board[i][j] = '.'
 				}
 				return false
 			}
@@ -29,19 +30,19 @@ func solveSudoku(board [][]byte) {
 	backtracking(board)
 }
 
-func isValid4(board [][]byte, val byte, row, col int) bool {
+func isValid4(board [][]byte, val byte, x, y int) bool {
 	for i := 0; i < 9; i++ {
-		if board[i][col] == val {
+		if board[i][y] == val {
 			return false
 		}
 	}
 	for i := 0; i < 9; i++ {
-		if board[row][i] == val {
+		if board[x][i] == val {
 			return false
 		}
 	}
-	startRow := (row / 3) * 3
-	startCol := (col / 3) * 3
+	startRow := (x / 3) * 3
+	startCol := (y / 3) * 3
 	for i := startRow; i < startRow+3; i++ {
 		for j := startCol; j < startCol+3; j++ {
 			if board[i][j] == val {
