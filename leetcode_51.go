@@ -1,55 +1,62 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 )
 
+func main() {
+	res := solveNQueens(4)
+	fmt.Println(res)
+}
+
 func solveNQueens(n int) [][]string {
-	var res [][]string
-	chessboard := make([][]string, n)
+	board := make([][]string, n)
 	for i := 0; i < n; i++ {
-		chessboard[i] = make([]string, n)
+		board[i] = make([]string, n)
 	}
 	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
-			chessboard[i][j] = "."
+			board[i][j] = "."
 		}
 	}
+	res := make([][]string, 0)
 	var backtracking func(int)
 	backtracking = func(row int) {
 		if row == n {
-			temp := make([]string, n)
-			for i, rowStr := range chessboard {
-				temp[i] = strings.Join(rowStr, "")
+			tmp := make([]string, n)
+			for i, rowStr := range board {
+				tmp[i] = strings.Join(rowStr, "")
 			}
-			res = append(res, temp)
+			res = append(res, tmp)
 			return
 		}
 		for i := 0; i < n; i++ {
-			if isValid1(n, row, i, chessboard) {
-				chessboard[row][i] = "Q"
-				backtracking(row + 1)
-				chessboard[row][i] = "."
+			if !isValid5(board, n, row, i) {
+				continue
 			}
+			board[row][i] = "Q"
+			backtracking(row + 1)
+			board[row][i] = "."
 		}
 	}
 	backtracking(0)
 	return res
 }
 
-func isValid1(n, row, col int, chessboard [][]string) bool {
-	for i := 0; i < row; i++ {
-		if chessboard[i][col] == "Q" {
+func isValid5(board [][]string, n, row, col int) bool {
+	for i := 0; i < n; i++ {
+		if board[i][col] == "Q" {
 			return false
 		}
 	}
 	for i, j := row-1, col-1; i >= 0 && j >= 0; i, j = i-1, j-1 {
-		if chessboard[i][j] == "Q" {
+		if board[i][j] == "Q" {
 			return false
 		}
 	}
 	for i, j := row-1, col+1; i >= 0 && j < n; i, j = i-1, j+1 {
-		if chessboard[i][j] == "Q" {
+		if board[i][j] == "Q" {
 			return false
 		}
 	}
