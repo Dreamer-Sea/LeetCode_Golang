@@ -11,7 +11,7 @@ func main() {
 
 func permute(nums []int) [][]int {
 	res := make([][]int, 0)
-	used := make([]bool, len(nums), len(nums))
+	used := make([]bool, len(nums))
 	var backtracking func([]int)
 	backtracking = func(temp []int) {
 		if len(temp) == len(nums) {
