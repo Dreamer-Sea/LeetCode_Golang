@@ -11,7 +11,7 @@ func main() {
 		{"JFK", "NRT"},
 		{"NRT", "JFK"},
 	}
-	res := findItinerary(tickets)
+	res := findItinerary1(tickets)
 	fmt.Println(res)
 }
 
@@ -34,7 +34,7 @@ func (p pairs) Less(i, j int) bool {
 	return p[i].dst < p[j].dst
 }
 
-func findItinerary(tickets [][]string) []string {
+func findItinerary1(tickets [][]string) []string {
 	res := make([]string, 0, len(tickets)+1)
 	ticketsMap := make(map[string]pairs)
 	for _, t := range tickets {
@@ -48,29 +48,30 @@ func findItinerary(tickets [][]string) []string {
 	for _, toList := range ticketsMap {
 		sort.Sort(toList)
 	}
-	pairList := ticketsMap["JFK"]
-	var backtracking func([]string, pairs) bool
-	backtracking = func(temp []string, pairList pairs) bool {
-		if len(tickets)+1 == len(temp) {
-			for _, t := range temp {
-				res = append(res, t)
-			}
+	beginPairList := ticketsMap["JFK"]
+	temp := []string{"JFK"}
+	backtracking9(tickets, temp, ticketsMap, beginPairList, &res)
+	return res
+}
+
+func backtracking9(tickets [][]string, temp []string, ticketsMap map[string]pairs, pairList pairs, res *[]string) bool {
+	if len(tickets)+1 == len(temp) {
+		for _, t := range temp {
+			*res = append(*res, t)
+		}
+		return true
+	}
+	for _, to := range pairList {
+		if to.visited {
+			continue
+		}
+		to.visited = true
+		temp = append(temp, to.dst)
+		if backtracking9(tickets, temp, ticketsMap, ticketsMap[to.dst], res) {
 			return true
 		}
-		for _, to := range pairList {
-			if to.visited {
-				continue
-			}
-			to.visited = true
-			temp = append(temp, to.dst)
-			if backtracking(temp, ticketsMap[to.dst]) {
-				return true
-			}
-			temp = temp[:len(temp)-1]
-			to.visited = false
-		}
-		return false
+		to.visited = false
+		temp = temp[:len(temp)-1]
 	}
-	backtracking([]string{"JFK"}, pairList)
-	return res
+	return false
 }
