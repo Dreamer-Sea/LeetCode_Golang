@@ -11,6 +11,7 @@ func main() {
 }
 
 func solveNQueens(n int) [][]string {
+	res := make([][]string, 0)
 	board := make([][]string, n)
 	for i := 0; i < n; i++ {
 		board[i] = make([]string, n)
@@ -20,42 +21,46 @@ func solveNQueens(n int) [][]string {
 			board[i][j] = "."
 		}
 	}
-	res := make([][]string, 0)
-	var backtracking func(int)
-	backtracking = func(row int) {
-		if row == n {
-			tmp := make([]string, n)
-			for i, rowStr := range board {
-				tmp[i] = strings.Join(rowStr, "")
-			}
-			res = append(res, tmp)
-			return
-		}
-		for i := 0; i < n; i++ {
-			if !isValid5(board, n, row, i) {
-				continue
-			}
-			board[row][i] = "Q"
-			backtracking(row + 1)
-			board[row][i] = "."
-		}
-	}
-	backtracking(0)
+	backtracking10(board, n, 0, &res)
 	return res
 }
 
-func isValid5(board [][]string, n, row, col int) bool {
+func backtracking10(board [][]string, n, start int, res *[][]string) {
+	if start == n {
+		temp := make([]string, 0, len(board))
+		for _, tmpStr := range board {
+			temp = append(temp, strings.Join(tmpStr, ""))
+		}
+		*res = append(*res, temp)
+		return
+	}
 	for i := 0; i < n; i++ {
+		if board[start][i] != "." {
+			continue
+		}
+		if !isValid1(board, start, i) {
+			continue
+		}
+		board[start][i] = "Q"
+		backtracking10(board, n, start+1, res)
+		board[start][i] = "."
+	}
+}
+
+func isValid1(board [][]string, row, col int) bool {
+	for i := 0; i < len(board); i++ {
 		if board[i][col] == "Q" {
 			return false
 		}
 	}
+
 	for i, j := row-1, col-1; i >= 0 && j >= 0; i, j = i-1, j-1 {
 		if board[i][j] == "Q" {
 			return false
 		}
 	}
-	for i, j := row-1, col+1; i >= 0 && j < n; i, j = i-1, j+1 {
+
+	for i, j := row-1, col+1; i >= 0 && j < len(board); i, j = i-1, j+1 {
 		if board[i][j] == "Q" {
 			return false
 		}
