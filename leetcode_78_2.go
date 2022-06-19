@@ -5,30 +5,24 @@ import (
 )
 
 func main() {
-	subsets2([]int{1, 2, 3})
-	fmt.Println(res2)
+	nums := []int{1, 2, 3}
+	res := subsets1(nums)
+	fmt.Println(res)
 }
 
-var res2 [][]int
-
-func subsets2(nums []int) [][]int {
-	res2 = make([][]int, 0)
-	for i := 0; i <= len(nums); i++ {
-		dfs(nums, []int{}, i, 0)
-	}
-	return res2
-}
-
-func dfs(nums, temp []int, length, start int) {
-	if len(temp) == length {
+func subsets1(nums []int) [][]int {
+	res := make([][]int, 0)
+	var backtracking func(int, []int)
+	backtracking = func(start int, temp []int) {
 		tmp := make([]int, len(temp))
 		copy(tmp, temp)
-		res2 = append(res2, tmp)
-		return
+		res = append(res, tmp)
+		for i := start; i < len(nums); i++ {
+			temp = append(temp, nums[i])
+			backtracking(i+1, temp)
+			temp = temp[:len(temp)-1]
+		}
 	}
-	for i := start; i < len(nums); i++ {
-		temp = append(temp, nums[i])
-		dfs(nums, temp, length, i+1)
-		temp = temp[:len(temp)-1]
-	}
+	backtracking(0, []int{})
+	return res
 }

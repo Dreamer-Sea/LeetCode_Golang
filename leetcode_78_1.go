@@ -2,31 +2,27 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
 func main() {
 	nums := []int{1, 2, 3}
-	subsets(nums)
+	res := subsets(nums)
 	fmt.Println(res)
 }
 
-var res [][]int
-
 func subsets(nums []int) [][]int {
-	res = make([][]int, 0)
-	sort.Ints(nums)
-	backtracking(nums, []int{}, 0)
+	res := make([][]int, 0)
+	backtracking14(nums, []int{}, 0, &res)
 	return res
 }
 
-func backtracking(nums, temp []int, start int) {
+func backtracking14(nums, temp []int, start int, res *[][]int) {
 	tmp := make([]int, len(temp))
 	copy(tmp, temp)
-	res = append(res, tmp)
+	*res = append(*res, tmp)
 	for i := start; i < len(nums); i++ {
 		temp = append(temp, nums[i])
-		backtracking(nums, temp, i+1)
+		backtracking14(nums, temp, i+1, res)
 		temp = temp[:len(temp)-1]
 	}
 }
