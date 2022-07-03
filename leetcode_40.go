@@ -6,32 +6,31 @@ import (
 )
 
 func main() {
-	candidates := []int{10, 1, 2, 7, 6, 1, 5}
+	candidates := []int{10, 1, 2, 7, 6, 1}
 	target := 8
 	res := combinationSum2(candidates, target)
 	fmt.Println(res)
 }
 
 func combinationSum2(candidates []int, target int) [][]int {
-	res := make([][]int, 0)
 	sort.Ints(candidates)
-	backtracking8(candidates, []int{}, target, 0, 0, &res)
-	return res
-}
-
-func backtracking8(candidates, temp []int, target, sum, start int, res *[][]int) {
-	if sum == target {
-		tmp := make([]int, len(temp))
-		copy(tmp, temp)
-		*res = append(*res, tmp)
-		return
-	}
-	for i := start; i < len(candidates) && sum+candidates[i] <= target; i++ {
-		if i > start && candidates[i] == candidates[i-1] {
-			continue
+	res := make([][]int, 0)
+	var backtracking func(temp []int, start, sum int)
+	backtracking = func(temp []int, start, sum int) {
+		if sum == target {
+			tmp := make([]int, len(temp))
+			copy(tmp, temp)
+			res = append(res, tmp)
 		}
-		temp = append(temp, candidates[i])
-		backtracking8(candidates, temp, target, sum+candidates[i], i+1, res)
-		temp = temp[:len(temp)-1]
+		for i := start; i < len(candidates) && sum+candidates[i] <= target; i++ {
+			if i > start && candidates[i] == candidates[i-1] {
+				continue
+			}
+			temp = append(temp, candidates[i])
+			backtracking(temp, i+1, sum+candidates[i])
+			temp = temp[:len(temp)-1]
+		}
 	}
+	backtracking([]int{}, 0, 0)
+	return res
 }
