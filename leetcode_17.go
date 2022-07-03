@@ -1,12 +1,7 @@
 package main
 
-import (
-	"fmt"
-)
-
 func main() {
-	result := letterCombinations("23")
-	fmt.Println(result)
+
 }
 
 func letterCombinations(digits string) []string {
@@ -15,24 +10,24 @@ func letterCombinations(digits string) []string {
 		digits == "*" || digits == "#" {
 		return []string{}
 	}
-	res6 := make([]string, 0)
+	res := make([]string, 0)
 	digitsMap := [10]string{
 		"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz",
 	}
-	backtracking6(digits, "", 0, digitsMap, &res6)
-	return res6
-}
-
-func backtracking6(digits, temp string, idx int, digitsMap [10]string, res *[]string) {
-	if len(digits) == idx {
-		*res = append(*res, temp)
-		return
+	var backtracking func(temp string, idx int)
+	backtracking = func(temp string, idx int) {
+		if idx == len(digits) {
+			res = append(res, temp)
+			return
+		}
+		num := digits[idx] - '0'
+		chars := digitsMap[num]
+		for i := 0; i < len(chars); i++ {
+			temp += string(chars[i])
+			backtracking(temp, idx+1)
+			temp = temp[:len(temp)-1]
+		}
 	}
-	num := digits[idx] - '0'
-	chars := digitsMap[num]
-	for i := 0; i < len(chars); i++ {
-		temp = temp + string(chars[i])
-		backtracking6(digits, temp, idx+1, digitsMap, res)
-		temp = temp[:len(temp)-1]
-	}
+	backtracking("", 0)
+	return res
 }
