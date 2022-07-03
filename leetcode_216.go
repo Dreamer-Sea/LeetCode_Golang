@@ -1,38 +1,28 @@
 package main
 
-import (
-	"fmt"
-)
-
 func main() {
-	combinationSum3(9, 45)
-	fmt.Println(res5)
-}
 
-var res5 [][]int
+}
 
 func combinationSum3(k int, n int) [][]int {
-	res5 = make([][]int, 0)
-	backtracking5([]int{}, k, n, 0, 1)
-	return res5
-}
-
-func backtracking5(temp []int, k, n, sum, start int) {
-	if sum > n {
-		return
-	}
-	if sum == n {
-		if len(temp) != k {
+	res := make([][]int, 0)
+	var backtracking func(temp []int, start, sum int)
+	backtracking = func(temp []int, start, sum int) {
+		if sum == n {
+			if len(temp) != k {
+				return
+			}
+			tmp := make([]int, len(temp))
+			copy(tmp, temp)
+			res = append(res, tmp)
 			return
 		}
-		tmp := make([]int, len(temp))
-		copy(tmp, temp)
-		res5 = append(res5, tmp)
-		return
+		for i := start; i <= 9 && i+sum <= n; i++ {
+			temp = append(temp, i)
+			backtracking(temp, i+1, sum+i)
+			temp = temp[:len(temp)-1]
+		}
 	}
-	for i := start; i <= 9-(k-len(temp))+1; i++ {
-		temp = append(temp, i)
-		backtracking5(temp, k, n, sum+i, i+1)
-		temp = temp[:len(temp)-1]
-	}
+	backtracking([]int{}, 1, 0)
+	return res
 }
