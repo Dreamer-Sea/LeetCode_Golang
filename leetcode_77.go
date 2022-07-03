@@ -1,35 +1,25 @@
 package main
 
-import (
-	"fmt"
-)
-
 func main() {
-	combine(4, 2)
-	fmt.Println(res4)
-}
 
-var res4 [][]int
+}
 
 func combine(n int, k int) [][]int {
-	res4 = make([][]int, 0)
-	if n <= 0 || k <= 0 || k > n {
-		return res4
+	res := make([][]int, 0)
+	var backtracking func(temp []int, start int)
+	backtracking = func(temp []int, start int) {
+		if len(temp) == k {
+			tmp := make([]int, len(temp))
+			copy(tmp, temp)
+			res = append(res, tmp)
+			return
+		}
+		for i := start; i <= n; i++ {
+			temp = append(temp, i)
+			backtracking(temp, i+1)
+			temp = temp[:len(temp)-1]
+		}
 	}
-	backtracking4([]int{}, n, k, 1)
-	return res4
-}
-
-func backtracking4(temp []int, n, k, start int) {
-	if len(temp) == k {
-		tmp := make([]int, len(temp))
-		copy(tmp, temp)
-		res4 = append(res4, tmp)
-		return
-	}
-	for i := start; i <= n-(k-len(temp))+1; i++ {
-		temp = append(temp, i)
-		backtracking4(temp, n, k, i+1)
-		temp = temp[:len(temp)-1]
-	}
+	backtracking([]int{}, 1)
+	return res
 }
