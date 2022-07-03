@@ -1,33 +1,29 @@
 package main
 
 import (
-	"fmt"
 	"sort"
 )
 
 func main() {
-	candidates := []int{2, 3, 5}
-	target := 8
-	fmt.Println(combinationSum(candidates, target))
+
 }
 
 func combinationSum(candidates []int, target int) [][]int {
-	res := make([][]int, 0)
 	sort.Ints(candidates)
-	backtracking7(candidates, []int{}, target, 0, 0, &res)
+	res := make([][]int, 0)
+	var backtracking func(temp []int, start, sum int)
+	backtracking = func(temp []int, start, sum int) {
+		if sum == target {
+			tmp := make([]int, len(temp))
+			copy(tmp, temp)
+			res = append(res, tmp)
+		}
+		for i := start; i < len(candidates) && sum+candidates[i] <= target; i++ {
+			temp = append(temp, candidates[i])
+			backtracking(temp, i, sum+candidates[i])
+			temp = temp[:len(temp)-1]
+		}
+	}
+	backtracking([]int{}, 0, 0)
 	return res
-}
-
-func backtracking7(candidates, temp []int, target, sum, start int, res *[][]int) {
-	if sum == target {
-		tmp := make([]int, len(temp))
-		copy(tmp, temp)
-		*res = append(*res, tmp)
-		return
-	}
-	for i := start; i < len(candidates) && sum+candidates[i] <= target; i++ {
-		temp = append(temp, candidates[i])
-		backtracking7(candidates, temp, target, sum+candidates[i], i, res)
-		temp = temp[:len(temp)-1]
-	}
 }
